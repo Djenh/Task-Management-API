@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// role : ADMIN
+// permission : [{"resource": "users", "actions": ["read", "create", "edit", "delete"]}, {"resource": "tasks", "actions": ["read", "create", "edit", "delete"]}]
+
+// role : USER, EDITOR, ...
+// permission : [{"resource": "users", "actions": ["read"]}, {"resource": "tasks", "actions": ["read", "create", "edit"]}]
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  permissions Permission[]
+  users       User[]
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  resource  Resource
+  actions   Json     @default("[]") //Action[] 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  roles     Role[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  role      Role     @relation(fields: [roleId], references: [id]) //BELONGS TO
+  roleId    Int      @default(1) @map("role_id")
+  name      String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  tasks     Task[] //ONE TO MANY
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id]) //BELONGS TO
+  userId      Int      @map("user_id")
+  name        String   @db.VarChar(255)
+  description String   @db.Text()
+  status      Status
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+}
+
+enum Resource {
+  USERS
+  TASKS
+}
+
+enum Action {
+  CREATE
+  SHOW
+  READ
+  UPDATE
+  DELETE
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  DONE
+}
