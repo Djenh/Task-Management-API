@@ -5,94 +5,116 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  <p align="center">Step by step guide to build a full NestJS Task Management API app with authentication, middlewares, roles and permissions, controllers and services.</p>
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## 1. Project setup
+Create the project folder by running the following command
 
 ```bash
-$ npm install
+nest new tuto-task-app
 ```
 
-## Compile and run the project
+Then choose `npm` or `yarn` or `pnpm` as your packages manager to craft the app. 
+After creating the project go to it directory and open the project folder with your code editor.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd new tuto-task-app
 ```
-
-## Run tests
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+Check if the project is well set up
+```bash
+npm run start:dev
+```
+And go to [http://localhost:3000/](http://localhost:3000/)
+If everything runs well, you'll see a **`Hello World`** messsage
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+
+## 2. Connecting to the database using Prisma
+
+### 2.1. Install Prisma
+
+Prisma is an open-source ORM for Node.js and TypeScript
+```bash
+npm install prisma --save-dev
+```
+To hash password in database
+```bash
+npm install bcrypt @types/bcrypt
+```
+Now, install `dotenv` package
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install dotenv
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Now create your initial Prisma setup using the init command of the Prisma CLI:
 
-## Resources
+```bash
+npx prisma init
+```
+This command creates a new prisma directory with `schema.prisma` and `.env` files
+In the file `schema.prisma` ensure that you have the following lines
+```typescript
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../generated/prisma" // <---- Delete this line
+}
 
-Check out a few resources that may come in handy when working with NestJS:
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+```
+But it will depends of the database manager, you're using. Please check this link for others DB manager
+[https://docs.nestjs.com/recipes/prisma#set-up-prisma](https://docs.nestjs.com/recipes/prisma#set-up-prisma)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
+In the file `prisma.config.ts` add the import package dotenv
+```typescript
+import "dotenv/config";
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Check your `.env` file to ensure that the **DATABASE_URL** is correct.
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 2.2. Create migrations in Prisma
 
-## License
+In the file `schema.prisma` create your models
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+After model is written, run command to format in Prisma tabulation
+```bash
+npx prisma format
+```
+
+Now run 
+```bash
+npx prisma migrate dev --name init
+```
+
+This command will create migrations in your database and it will automatically install Prisma Client
+for your project if it not yet set up.
+In case prisma clien is not installed with that command, please run the following one
+
+```bash
+npm install @prisma/client
+```
+
+As we run the command with `dev` option, you can now see a migration file created by Prisma in the
+directory `prisma\migrations\2025...\migration.sql`
+
+
+Everytime you modify your models, you need to run these commands
+```bash
+npx prisma generate
+```
+
+```bash
+npx prisma migrate dev --name edit_service_model
+```
+
