@@ -25,8 +25,8 @@ model Role {
   name        String       @db.VarChar(255)
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
-  permissions Permission[]
-  users       User[]
+  permissions Permission[] // One To Many
+  users       User[] // One To Many
 }
 
 model Permission {

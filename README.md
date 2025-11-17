@@ -58,20 +58,8 @@ Now create your initial Prisma setup using the init command of the Prisma CLI:
 ```bash
 npx prisma init
 ```
-This command creates a new prisma directory with `schema.prisma` and `.env` files
-In the file `schema.prisma` ensure that you have the following lines
-```typescript
-generator client {
-  provider = "prisma-client-js"
-  //output   = "../generated/prisma" // <---- Delete this line
-}
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-```
-But it will depends of the database manager, you're using. Please check this link for others DB manager
+Configure database manager, you're using. Please check this link for others DB manager
 [https://docs.nestjs.com/recipes/prisma#set-up-prisma](https://docs.nestjs.com/recipes/prisma#set-up-prisma)
 
 
@@ -97,24 +85,44 @@ Now run
 npx prisma migrate dev --name init
 ```
 
-This command will create migrations in your database and it will automatically install Prisma Client
-for your project if it not yet set up.
-In case prisma clien is not installed with that command, please run the following one
+## 3. Database Seeding
 
-```bash
-npm install @prisma/client
-```
+We need to have default value for Role, Permission and actions in our database before assigning them to the User.
 
-As we run the command with `dev` option, you can now see a migration file created by Prisma in the
-directory `prisma\migrations\2025...\migration.sql`
+Let's create a seeder by following the Prisma offical documentation
+
+[https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding](https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding)
 
 
-Everytime you modify your models, you need to run these commands
-```bash
-npx prisma generate
-```
+## 4. Validation Pipe and DTO
 
-```bash
-npx prisma migrate dev --name edit_service_model
-```
 
+
+## 5. Module, controller and service
+
+
+
+## 6. Authentication with JWT
+
+
+
+## 7. Authorization
+
+
+
+## 8. Logging, Middleware and Exception Handling
+
+
+
+## 9. Rate limits
+
+
+
+## 10. Pagination, Filtering, and Swagger
+
+
+
+## 11. Testing 
+
+
+## 12. Deployment 
