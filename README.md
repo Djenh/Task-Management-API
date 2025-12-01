@@ -96,6 +96,53 @@ Let's create a seeder by following the Prisma offical documentation
 
 ## 4. Validation Pipe and DTO
 
+DTO means Data Transfer Object. It's a simple class that describes the shape of our input data.
+
+Pipes have two typical use cases:
+
+- transformation: transform input data to the desired form (e.g., from string to integer)
+- validation: evaluate input data and if valid, simply pass it through unchanged; otherwise, throw an exception?
+
+
+Install `class-validator` package by running this command
+```bash
+npm i --save class-validator class-transformer
+```
+Create DTO files for every model by running **resource** command line
+
+```bash
+nest g resource users
+nest g resource tasks
+nest g resource roles
+```
+
+This single command `nest g resource` generates:
+
+- A module to organize everything
+
+- A controller with RESTful endpoints
+
+- A service for business logic
+
+- DTO for data validation
+
+- Entity/Model definitions
+
+- Test files for everything
+
+Enable global validation by adding Pipe Validatio in our `main.ts`
+
+```typescript
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, //Delete all fields which are defined in the DTO
+    transform: true //Transform type of all incoming data automatically
+  }));
+  await app.listen(process.env.PORT ?? 3000);
+}
+```
+
 
 
 ## 5. Module, controller and service
