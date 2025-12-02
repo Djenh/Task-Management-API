@@ -144,9 +144,63 @@ async function bootstrap() {
 ```
 
 
-
 ## 5. Module, controller and service
 
+Create a Prisma Module and Service to initialize connection with the database.
+
+In every module (eg. `user.module.ts` file), import *PrismaModule*
+
+```typescript
+imports: [PrismaModule],
+...
+```
+
+
+In every controller (eg. `user.controller.ts` file), add constructor with its model Service injected in it.
+
+```typescript
+constructor(private readonly usersService: UsersService) {}
+
+@Post()
+create(@Body() createUserDto: CreateUserDto) {
+  return this.usersService.create(createUserDto);
+}
+
+...
+```
+
+In `user.service.ts` file, add constructor with PrismaService injected in it.
+
+```typescript
+import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+
+constructor(private readonly prismaService: PrismaService){}
+
+async create(createUserDto: CreateUserDto): Promise<User> {
+  ...
+}
+...
+```
+
+
+To launch the app, now run 
+```bash
+npm run start:dev
+```
+
+**Test the endpoints**
+
+All endpoints will be in format **http://ip_address:3000/users**
+
+With Postman or other API testing tool, test endpoints
+- GET http://ip_address:3000/users
+- GET http://ip_address:3000/users/1
+- POST http://ip_address:3000/users
+
+- GET http://ip_address:3000/tasks
+- GET http://ip_address:3000/tasks/1
+- POST http://ip_address:3000/tasks
 
 
 ## 6. Authentication with JWT
@@ -165,11 +219,15 @@ async function bootstrap() {
 
 
 
-## 10. Pagination, Filtering, and Swagger
+## 10. Upload file
 
 
 
-## 11. Testing 
+## 11. Pagination, Filtering, and Swagger
 
 
-## 12. Deployment 
+
+## 12. Testing 
+
+
+## 13. Deployment 

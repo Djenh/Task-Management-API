@@ -1,7 +1,11 @@
 import { Status } from "@prisma/client";
-import { IsEnum, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class CreateTaskDto {
+
+    @IsInt()
+    userId: number;
+    
     @IsString()
     @MinLength(4)
     @IsNotEmpty({message: "The name is required"})
